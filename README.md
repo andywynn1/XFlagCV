@@ -116,8 +116,26 @@ like all current trackers, BoT-SORT does not  preserve player identity through h
 ---
 
 ## Evaluation
+//pre snap photo
+###Performance Metrics (Player Detection)
 
-<!-- training curves, precision/recall/mAP numbers, presnap accuracy -->
+Trained on hand annotaded drone footage (Roboflow), final model: `weights/best.pt`
+
+| Metric | Score |
+|---|---|
+| mAP@50 | 93.2% |
+| mAP@50-95 | 65% |
+| Precision | 94.2% |
+| Recall | 85.9% |
+| F1 | 89.8% |
+
+//add training curves here and pre snap photo here
+
+###Performance Metrics (Team Assignment)
+
+To be be tested
+
+
 
 ---
 
