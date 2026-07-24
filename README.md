@@ -92,24 +92,24 @@ XFlagCV/
 ## Methodology
 
 ### Detection
-*Located in `weights/best.pt`*:
+*Located in `weights/best.pt`:*
 
 Player detection uses a custom-trained YOLO11 model rather than a generic pretrained detector. The model was fine-tuned  across multiple rounds of hand annotaded game footage involving a variety of drone heights, angles and orientations. 
 
 ### Tracking
-*Located in `src/pipeline.py`*:
+*Located in `src/pipeline.py`:*
 
 Frame-to-frame player tracking uses **BoT-SORT**. 
 This choice comes from published research [Otsubo et al. (2025)](#references) where they benchmarked seven trackers and found BoT-SORT achieved the best scores both before and after fine tuning.
 
 ### Team Assignment
-*Located in `src/team_assigner.py`*:
+*Located in `src/team_assigner.py`:*
 
 `TeamAssigner` fits once, on a single clean pre snap frame, and locks each track's team permanently. 
 Team color is extracted using **SigLIP embeddings, reduced with UMAP, and clustered with KMeans** (via `roboflow/sports`) instead of raw pixel color averaging.
 
 ### Track Stitching
-*Located in `src/track_stitcher.py`*:
+*Located in `src/track_stitcher.py`:*
 
 like all current trackers, BoT-SORT does not  preserve player identity through heavy contact, a tracked player can lose their ID mid-collision and be reassigned a new one on reappearance. `TrackStitcher` is a custom post processing layer designed to detects these breaks and merges them back together.
 
