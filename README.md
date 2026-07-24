@@ -24,6 +24,9 @@
 
 ## Overview
 
+<div align="center">
+  <img src="./assets/clip.gif" alt="Demo" width="600" />
+</div>
 <!-- demo gif, still frames, description, feature list go here -->
 
 ---
