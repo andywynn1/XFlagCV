@@ -67,24 +67,25 @@ XFlagCV is built as a pipeline where each stage's output feeds into the next.
 | 3 | **Team Assignment** — SigLIP + UMAP + KMeans | One pre-snap frame's player crops | `{track_id: team}` lookup, locked |
 | 4 | **Track Stitching** — position/time/team matching | Full clip's track history | Cleaned, reunited track IDs |
 
-**Output:** labeled video — every player boxed, tracked, and team-colored across the full play.
+**Output:** labeled video with every player boxed, tracked, and team colored across the full play.
 
 ---
 
 ## Project Structure
 
-\`\`\`
+
+```text
 XFlagCV/
-├── 📁weights/
-│   └── best.pt                    # trained YOLO11 detection model
-├── 📁src/
-│   ├── team_assigner.py           # pre-snap SigLIP-based team classification
-│   ├── track_stitcher.py          # post tracking identity recovery
-│   └── pipeline.py                # pipeline entry point
-├── 📁assets/
-│   ├── (photos/gifs etc)
-└── 📄README.md
-\`\`\`
+├── 📁 weights/
+│   └── best.pt                 # trained YOLO11 detection model
+├── 📁 src/
+│   ├── team_assigner.py        # pre-snap SigLIP-based team classification
+│   ├── track_stitcher.py       # post tracking identity recovery
+│   └── pipeline.py             # pipeline entry point
+├── 📁 assets/
+│   └── (photos/gifs etc)
+└── 📄 README.md
+```
 
 ---
 
