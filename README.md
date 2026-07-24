@@ -116,7 +116,12 @@ like all current trackers, BoT-SORT does not  preserve player identity through h
 ---
 
 ## Evaluation
-//pre snap photo
+
+<p align="center">
+  <img src="./assets/ss1.png" alt="flag football computer vision pre snap team assignment" width="50%" /><br>
+  <em>System Architecture Flowchart</em>
+</p>
+
 ###Performance Metrics (Player Detection)
 
 Trained on hand annotaded drone footage (Roboflow), final model: `weights/best.pt`
@@ -129,7 +134,10 @@ Trained on hand annotaded drone footage (Roboflow), final model: `weights/best.p
 | Recall | 85.9% |
 | F1 | 89.8% |
 
-//add training curves here and pre snap photo here
+<p align="center">
+  <img src="./assets/v6results.png" alt="flag football computer vision player detection training results" width="50%" /><br>
+  <em>System Architecture Flowchart</em>
+</p>
 
 ###Performance Metrics (Team Assignment)
 
