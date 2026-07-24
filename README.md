@@ -51,7 +51,40 @@ Flag football also naturally packs 10+ players into a tight cluster with teammat
 
 ## Architecture
 
-<!-- pipeline diagram + one-line-per-stage breakdown goes here -->
+<p align="center">
+  <img src="./assets/flowchart.png" alt="Flowchart Diagram" width="80%" />
+</p>
+
+XFlagCV is built as a pipeline where each stage's output feeds into the next. 
+1. Detection and tracking run continuously across every frame; 
+2. Team assignment runs once, using a pre-snap frame; 
+3. stitching runs once at the end, cleaning up broken id's across the whole clip.
+
+| Stage | Component | Input | Output |
+|---|---|---|---|
+| 1 | **Detection** — custom YOLO11 model | Raw video frame | Player bounding boxes |
+| 2 | **Tracking** — BoT-SORT | Boxes across frames | Persistent track IDs |
+| 3 | **Team Assignment** — SigLIP + UMAP + KMeans | One pre-snap frame's player crops | `{track_id: team}` lookup, locked |
+| 4 | **Track Stitching** — position/time/team matching | Full clip's track history | Cleaned, reunited track IDs |
+
+**Output:** labeled video — every player boxed, tracked, and team-colored across the full play.
+
+---
+
+## Project Structure
+
+\`\`\`
+XFlagCV/
+├── 📁weights/
+│   └── best.pt                    # trained YOLO11 detection model
+├── 📁src/
+│   ├── team_assigner.py           # pre-snap SigLIP-based team classification
+│   ├── track_stitcher.py          # post tracking identity recovery
+│   └── pipeline.py                # pipeline entry point
+├── 📁assets/
+│   ├── (photos/gifs etc)
+└── 📄README.md
+\`\`\`
 
 ---
 
