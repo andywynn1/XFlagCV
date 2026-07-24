@@ -112,6 +112,7 @@ Team color is extracted using **SigLIP embeddings, reduced with UMAP, and cluste
 *Located in `src/track_stitcher.py`*
 
 like all current trackers, BoT-SORT does not  preserve player identity through heavy contact, a tracked player can lose their ID mid-collision and be reassigned a new one on reappearance. `TrackStitcher` is a custom post processing layer designed to detects these breaks and merges them back together.
+
 ---
 
 ## Evaluation
