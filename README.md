@@ -16,7 +16,7 @@
 
 <br />
 
-[Overview](#overview) | [Architecture](#architecture) | [Methodology](#methodology) | [Evaluation](#evaluation) | [Results](#results) | [Limitations](#limitations) | [Installation](#installation) | [Usage](#usage) | [Future Work](#future-work)
+[Overview](#overview) | [Architecture](#architecture) | [Methodology](#methodology) | [Evaluation](#evaluation) | [Results](#results) | [Limitations](#limitations) | [Installation](#installation) | [Usage](#usage) | [Future Work](#future-work) | [References](#references)
 
 </div>
 
@@ -52,7 +52,7 @@ Flag football also naturally packs 10+ players into a tight cluster with teammat
 ## Architecture
 
 <p align="center">
-  <img src="./assets/flowchart.png" alt="Flowchart Diagram" width="80%" />
+  <img src="./assets/flowchart.png" alt="Flowchart Diagram" width="50%" />
 </p>
 
 XFlagCV is built as a pipeline where each stage's output feeds into the next. 
@@ -91,8 +91,27 @@ XFlagCV/
 
 ## Methodology
 
-<!-- detection / tracking / team assignment / stitching — the "how and why" -->
+### Detection
+*Located in `weights/best.pt`*
 
+Player detection uses a custom-trained YOLO11 model rather than a generic pretrained detector. The model was fine-tuned  across multiple rounds of hand annotaded game footage involving a variety of drone heights, angles and orientations. 
+
+### Tracking
+*Located in `src/pipeline.py`*
+
+Frame-to-frame player tracking uses **BoT-SORT**. 
+This choice comes from published research [Otsubo et al. (2025)](#references) where they benchmarked seven trackers and found BoT-SORT achieved the best scores both before and after fine tuning.
+
+### Team Assignment
+*Located in `src/team_assigner.py`*
+
+`TeamAssigner` fits once, on a single clean pre snap frame, and locks each track's team permanently. 
+Team color is extracted using **SigLIP embeddings, reduced with UMAP, and clustered with KMeans** (via `roboflow/sports`) instead of raw pixel color averaging.
+
+### Track Stitching
+*Located in `src/track_stitcher.py`*
+
+like all current trackers, BoT-SORT does not  preserve player identity through heavy contact, a tracked player can lose their ID mid-collision and be reassigned a new one on reappearance. `TrackStitcher` is a custom post processing layer designed to detects these breaks and merges them back together.
 ---
 
 ## Evaluation
@@ -131,6 +150,8 @@ XFlagCV/
 
 ---
 
+## References
 
+---
 
 </div>
