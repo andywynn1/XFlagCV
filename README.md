@@ -85,12 +85,6 @@ Flag football also naturally packs 10+ players into a tight cluster with teammat
 
 ---
 
-## Project Structure
-
-<!-- repo file tree -->
-
----
-
 ## Usage
 
 <!-- runnable code snippet -->
@@ -103,14 +97,6 @@ Flag football also naturally packs 10+ players into a tight cluster with teammat
 
 ---
 
-## Changelog
 
-<!-- dated log of what's been done / what's next -->
-
----
-
-## References
-
-<!-- your two cited papers -->
 
 </div>
