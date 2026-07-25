@@ -150,7 +150,32 @@ To be be tested
 
 ## Results
 
-<!-- demo gif #2 or stills showing the full pipeline in action -->
+### Full Pipeline
+
+<div align="center">
+  <img src="./assets/clip2.gif" alt="Demo" width="600" />
+</div>
+
+The clip above shows the complete pipeline running. 
+Detection, tracking, pre-snap team locking, and stitching, all overlaid live on unedited drone footage. Each box is colored by team, labeled with a persistent player ID.
+
+### How to Read the Output
+
+- **Solid team-colored box (red/blue)** — a player with a confidently resolved, locked team identity
+- **Yellow box** — an unresolved track, likely an identity the stitching layer could not confidently reunite after a break
+
+
+### What Works Well
+
+- Pre-snap team assignment is reliable and once locked, holds for the remainder of the play for any track that isn't interrupted
+- Player identity survives ordinary movement, running, and moderate crowding without issue
+
+### Where It Still Struggles
+
+- **Contact and collisions** When multiple players collide and separate over several frames, the tracker can fragment a single player's identity into more IDs
+- **Poor film conditions** Team assignment struggles when jerseys are similar, lighting is bright or dark, and when drone angles are too steep or shallow.
+
+
 
 ---
 
