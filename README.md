@@ -181,7 +181,17 @@ Detection, tracking, pre-snap team locking, and stitching, all overlaid live on 
 
 ## Limitations
 
-<!-- known failure modes, honestly framed, with citations -->
+
+- **Identity switches under heavy contact.** this is a known issue and is actively being researched ([Otsubo et al., 2025](#references)).
+
+- **Same-team jersey ambiguity in edge cases.** Team assignment relies on visual from a single pre-snap frame; Similar or identical dark uniforms often produce a misclassification.
+
+
+- **No ball tracking.** The pipeline tracks and identifies players only. For XFlag, ball detection would be too difficult, the variability in drone football, combined with the small ball size, frequent occlusion, and motion blur make it a substantially harder to detect than players.
+
+- **No field-coordinate mapping.** Player positions are in pixel space, not real-world field coordinates. Distance, speed, and formation based stats are not yet possible without a future homography transform.
+
+- **Drone film variablity** Games are recorded with manned drone crews creating film variablity in height, angle, and movement.
 
 ---
 
