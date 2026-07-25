@@ -197,7 +197,38 @@ Detection, tracking, pre-snap team locking, and stitching, all overlaid live on 
 
 ## Installation
 
-<!-- venv setup, requirements.txt, weight download -->
+**Requirements:** 
+
+- Python 3.9+
+- ultralytics
+- opencv-python
+- numpy
+- scikit-learn
+- torch
+
+```bash
+# Clone repo
+git clone https://github.com/<your-username>/XFlagCV.git
+cd XFlagCV
+
+# Create and start virtual environment
+python -m venv cv
+source cv/bin/activate      # Windows: cv\Scripts\activate
+
+# Install dependencies
+pip install ultralytics ... etc
+
+# Don't forget the SigLIP-based team classifier
+pip install git+https://github.com/roboflow/sports.git
+```
+
+**Model weights:** the trained player detector (`best.pt`) is  in `weights/`. 
+If it doesn't pull automatically,
+
+```bash
+git lfs install
+git lfs pull
+```
 
 ---
 
