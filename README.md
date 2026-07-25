@@ -53,6 +53,7 @@ Flag football also naturally packs 10+ players into a tight cluster with teammat
 
 <p align="center">
   <img src="./assets/flowchart.png" alt="Flowchart Diagram" width="50%" />
+  <em>Pipeline Flowchart</em>
 </p>
 
 XFlagCV is built as a pipeline where each stage's output feeds into the next. 
@@ -119,10 +120,10 @@ like all current trackers, BoT-SORT does not  preserve player identity through h
 
 <p align="center">
   <img src="./assets/ss1.png" alt="flag football computer vision pre snap team assignment" width="50%" /><br>
-  <em>System Architecture Flowchart</em>
+  <em>Pre-Snap Player detection and team assignment</em>
 </p>
 
-###Performance Metrics (Player Detection)
+### Performance Metrics (Player Detection)
 
 Trained on hand annotaded drone footage (Roboflow), final model: `weights/best.pt`
 
@@ -136,10 +137,10 @@ Trained on hand annotaded drone footage (Roboflow), final model: `weights/best.p
 
 <p align="center">
   <img src="./assets/v6results.png" alt="flag football computer vision player detection training results" width="50%" /><br>
-  <em>System Architecture Flowchart</em>
+  <em>Training Curves</em>
 </p>
 
-###Performance Metrics (Team Assignment)
+### Performance Metrics (Team Assignment)
 
 To be be tested
 
