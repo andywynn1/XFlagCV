@@ -82,6 +82,7 @@ XFlagCV/
 ├── 📁 src/
 │   ├── team_assigner.py        # pre-snap SigLIP-based team classification
 │   ├── track_stitcher.py       # post tracking identity recovery
+│   ├── render.py               # draws + saves the annotated output video
 │   └── pipeline.py             # pipeline entry point
 ├── 📁 assets/
 │   └── (photos/gifs etc)
@@ -222,7 +223,7 @@ pip install ultralytics ... etc
 pip install git+https://github.com/roboflow/sports.git
 ```
 
-**Model weights:** the trained player detector (`best.pt`) is  in `weights/`. 
+The trained player detector (`best.pt`) is  in `weights/`. 
 If it doesn't pull automatically,
 
 ```bash
@@ -234,7 +235,22 @@ git lfs pull
 
 ## Usage
 
-<!-- runnable code snippet -->
+XFlagCV is meant to process one play at a time. Point it at a single video file containing a play, and it runs the full pipeline (detection → tracking → team assignment → stitching) end-to-end on that clip.
+
+```python
+from src.pipeline import run_full_pipeline
+
+result = run_full_pipeline(
+    video_path="path/to/your_clip.mp4",
+    model_path="weights/best.pt",
+    presnap_frame_target=25,  #frame index where players are lined up pre-snap
+)
+
+print(result["team_summary"])  # e.g. {1: 6, 2: 5} — players per team
+```
+
+**Note on `presnap_frame_target`:** this should point to a frame where players are visible, upright, and unoccluded which is usually a moment pre-snap.
+
 
 ---
 
