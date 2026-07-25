@@ -284,7 +284,7 @@ This produces a fully labeled video with every player boxed, tracked with a pers
 ## Citation
 
 ```bibtex
-@misc{playmakers2024,
+@misc{XFlagCV,
   title        = {XFlagCV},
   author       = {Andrew Nguyen},
   year         = {2026}
