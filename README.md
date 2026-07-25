@@ -16,7 +16,7 @@
 
 <br />
 
-[Overview](#overview) | [Architecture](#architecture) | [Methodology](#methodology) | [Evaluation](#evaluation) | [Results](#results) | [Limitations](#limitations) | [Installation](#installation) | [Usage](#usage) | [Future Work](#future-work) | [References](#references)
+[Overview](#overview) | [Architecture](#architecture) | [Methodology](#methodology) | [Evaluation](#evaluation) | [Results](#results) | [Limitations](#limitations) | [Installation](#installation) | [Usage](#usage) | [Future Work](#future-work) | [References](#references) | [Citation](#citation)
 
 </div>
 
@@ -239,6 +239,7 @@ XFlagCV is meant to process one play at a time. Point it at a single video file 
 
 ```python
 from src.pipeline import run_full_pipeline
+from src.render import render_annotated_video
 
 result = run_full_pipeline(
     video_path="path/to/your_clip.mp4",
@@ -247,21 +248,46 @@ result = run_full_pipeline(
 )
 
 print(result["team_summary"])  # e.g. {1: 6, 2: 5} — players per team
+render_annotated_video(result, output_path="where you want")
 ```
 
-**Note on `presnap_frame_target`:** this should point to a frame where players are visible, upright, and unoccluded which is usually a moment pre-snap.
+This produces a fully labeled video with every player boxed, tracked with a persistent ID, and colored by team
 
 
 ---
 
 ## Future Work
 
-<!-- planned features, cited prior art -->
+- 🎯 Continue training the detector on more contact footage to reduce fragmenting ID's during collisions
+- 🎽 Correct Team assignment across a wider range of drone angles, lighting, and jersey color combinations
+- 🧵 Refine stitching so collisions are reunited more consistently
+- 📁 Add batch/folder-mode processing to run the pipeline across multiple clips in one call
+- 🗺️ Field homography to convert player positions into real world stats 
 
 ---
 
 ## References
 
+- Otsubo, R., Sawafuji, K., & Saito, H. (2025). *Hand Held Multi-Object Tracking Dataset in American Football*. MMSports '25 (8th International ACM Workshop on Multimedia Content Analysis in Sports), Dublin, Ireland. [arXiv:2511.09455](https://arxiv.org/abs/2511.09455)
+
+- Teklenburg, L. (2024). *AI-based Classification of American Football Plays Combining Computer Vision and Historical Play-by-Play Data*. Bachelor's Thesis, Technische Hochschule Ingolstadt.
+
+- Roboflow. *sports* — SigLIP + UMAP + KMeans team classification toolkit for sports computer vision. [github.com/roboflow/sports](https://github.com/roboflow/sports)
+
+- Ultralytics. *YOLO11*. [github.com/ultralytics/ultralytics](https://github.com/ultralytics/ultralytics)
+
+- Aharon, N., Orfaig, R., & Bobrovsky, B. (2022). *BoT-SORT: Robust Associations Multi-Pedestrian Tracking*. [arXiv:2206.14651](https://arxiv.org/abs/2206.14651)
+
 ---
 
+
+## Citation
+
+```bibtex
+@misc{playmakers2024,
+  title        = {XFlagCV},
+  author       = {Andrew Nguyen},
+  year         = {2026}
+}
+```
 </div>
