@@ -179,14 +179,14 @@ The clip above shows the complete pipeline running. Detection, tracking, pre-sna
 - **Identity switches under heavy contact:** This is a known issue and is actively being researched ([Otsubo et al., 2025](#references)).
 - **Same-team jersey ambiguity in edge cases:** Team assignment relies on visuals from a single pre-snap frame; similar or identical dark uniforms often produce a misclassification.
 - **No ball tracking:** The pipeline tracks and identifies players only. For flag football, ball detection is exceptionally difficult due to small ball size, frequent occlusion, and heavy motion blur.
-- **No field-coordinate mapping:** Player positions are in pixel space, not real-world field coordinates. Distance, speed, and formation-based stats are not yet possible without a future homography transform.
+- **No field-coordinate mapping:** Player positions are in pixel space, not real world field coordinates. Distance, speed, and formation-based stats are not yet possible without a future homography transform.
 - **Drone film variability:** Games are recorded with manned drone crews, creating variability in height, angle, and movement.
 
 ---
 
 ## Installation
 
-**Requirements:**
+**Prerequisites:**
 
 - Python 3.9+
 - PyTorch
@@ -202,7 +202,7 @@ cd XFlagCV
 
 # Create and start virtual environment
 python -m venv cv
-source cv/bin/activate      # Windows: cv\Scripts\activate
+source cv/bin/activate  
 
 # Install dependencies
 pip install ultralytics opencv-python numpy scikit-learn torch
