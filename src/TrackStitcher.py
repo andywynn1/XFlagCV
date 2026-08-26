@@ -1,12 +1,21 @@
 # TrackStitcher.py
-
 import numpy as np
+from scipy.optimize import linear_sum_assignment
 
-""""""
+BIG_COST = 1e6         
+FEASIBLE_CUTOFF = 50.0  
+
+
 class TrackStitcher:
-    def __init__(self, max_gap_frames=30, max_dist=150):
+    """
+    Reunites track IDs that got broken (e.g. during player contact) by matching
+    each track's ending position/appearance against every other track's starting
+    position/appearance, and solving the matching optimally (not greedily).
+    """
+    def __init__(self, max_gap_frames=30, max_speed_px_per_frame=15):
         self.max_gap_frames = max_gap_frames
-        self.max_dist = max_dist
+    
+        self.max_speed_px_per_frame = max_speed_px_per_frame
 
     def build_summaries(self, track_boxes_per_frame):
         summaries = {}
@@ -29,57 +38,77 @@ class TrackStitcher:
         return ((x1 + x2) / 2, (y1 + y2) / 2)
 
     def _dist(self, p1, p2):
-        return ((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2) ** 0.5
+        return ((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2) ** 0.5
+
+    def _pair_cost(self, ending_id, starting_id, summaries, assigner, embed_fn):
+        """Lower = better match. Returns BIG_COST if the pair is infeasible."""
+        end_frame = summaries[ending_id]["end_frame"]
+        start_frame = summaries[starting_id]["start_frame"]
+        gap = start_frame - end_frame
+
+        if gap <= 0 or gap > self.max_gap_frames:
+            return BIG_COST
+
+        dist = self._dist(self._center(summaries[ending_id]["end_box"]),
+                           self._center(summaries[starting_id]["start_box"]))
+      
+        budget = self.max_speed_px_per_frame * gap
+        if dist > budget:
+            return BIG_COST
+        dist_cost = dist / budget  
+
+        team_cost = 0.0
+        if assigner is not None:
+            end_team = assigner.classifier.predict([summaries[ending_id]["end_crop"]])[0]
+            start_team = assigner.classifier.predict([summaries[starting_id]["start_crop"]])[0]
+            team_cost = 0.0 if int(end_team) == int(start_team) else 1.0
+
+        appearance_cost = 0.5 
+        if embed_fn is not None:
+            e_embed = embed_fn(summaries[ending_id]["end_crop"])
+            s_embed = embed_fn(summaries[starting_id]["start_crop"])
+            sim = float(np.dot(e_embed, s_embed) /
+                        (np.linalg.norm(e_embed) * np.linalg.norm(s_embed) + 1e-8))
+            appearance_cost = (1 - sim) / 2 
+            
+        return dist_cost + 2.0 * team_cost + appearance_cost
 
     def stitch(self, summaries, assigner=None, embed_fn=None):
         track_ids = list(summaries.keys())
-        remap = {tid: tid for tid in track_ids}
-        track_ids_by_start = sorted(track_ids, key=lambda t: summaries[t]["start_frame"])
+        n = len(track_ids)
+        idx_of = {tid: i for i, tid in enumerate(track_ids)}
 
-        for ending_id in track_ids_by_start:
-            end_frame = summaries[ending_id]["end_frame"]
-            end_pos = self._center(summaries[ending_id]["end_box"])
-
-            candidates = []
-            for starting_id in track_ids:
-                if starting_id == ending_id:
+        cost = np.full((n, n), BIG_COST, dtype=float)
+        for i, ending_id in enumerate(track_ids):
+            for j, starting_id in enumerate(track_ids):
+                if ending_id == starting_id:
                     continue
-                gap = summaries[starting_id]["start_frame"] - end_frame
-                if gap <= 3 or gap > self.max_gap_frames:
-                    continue
-                dist = self._dist(end_pos, self._center(summaries[starting_id]["start_box"]))
-                if dist > self.max_dist:
-                    continue
-                candidates.append((starting_id, gap, dist))
+                cost[i, j] = self._pair_cost(ending_id, starting_id, summaries, assigner, embed_fn)
 
-            if not candidates:
-                continue
-            chosen_id = candidates[0][0] if len(candidates) == 1 else \
-                self._break_tie(ending_id, candidates, summaries, assigner, embed_fn)
+        row_idx, col_idx = linear_sum_assignment(cost)
 
-            remap[chosen_id] = remap[ending_id]
+      
+        parent = {tid: tid for tid in track_ids}
 
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        def union(a, b):
+            ra, rb = find(a), find(b)
+            if ra != rb:
+                parent[rb] = ra
+
+        for i, j in zip(row_idx, col_idx):
+            if cost[i, j] < FEASIBLE_CUTOFF:
+                ending_id, starting_id = track_ids[i], track_ids[j]
+                union(ending_id, starting_id)
+
+        
+        remap = {}
+        for tid in track_ids:
+            root = find(tid)
+            remap[tid] = root
         return remap
-
-    def _break_tie(self, ending_id, candidates, summaries, assigner, embed_fn):
-        scored = []
-        ending_team = assigner.get_team(ending_id) if assigner else None
-        ending_embed = embed_fn(summaries[ending_id]["end_crop"]) if embed_fn else None
-
-        for starting_id, gap, dist in candidates:
-            team_match = False
-            appearance_score = 0.0
-
-            if assigner and ending_team is not None:
-                predicted_team = int(assigner.classifier.predict([summaries[starting_id]["start_crop"]])[0])
-                team_match = (predicted_team == ending_team)
-
-            if embed_fn and ending_embed is not None:
-                start_embed = embed_fn(summaries[starting_id]["start_crop"])
-                appearance_score = float(np.dot(ending_embed, start_embed) /
-                    (np.linalg.norm(ending_embed) * np.linalg.norm(start_embed) + 1e-8))
-
-            scored.append((starting_id, dist, team_match, appearance_score))
-
-        scored.sort(key=lambda s: (not s[2], -s[3], s[1]))
-        return scored[0][0]
