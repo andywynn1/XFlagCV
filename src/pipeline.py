@@ -53,14 +53,24 @@ def run_full_pipeline(video_path, model_path, presnap_frame_target,
     assigner.fit(presnap_crops_by_track)
 
     # ---- Stitching (cleans up broken IDs) ----
-    stitcher = TrackStitcher(max_gap_frames=max_gap_frames, max_dist=max_dist)
+    stitcher = TrackStitcher(max_gap_frames=max_gap_frames)
     summaries = stitcher.build_summaries(track_boxes_per_frame)
     remap = stitcher.stitch(summaries, assigner=assigner)
+
+    all_track_ids = set(summaries.keys())
+    resolved_teams = {}
+    for tid in all_track_ids:
+        root = remap.get(tid, tid)
+        team = assigner.get_team(root)
+        if team is None:
+            team = int(assigner.classifier.predict([summaries[root]["start_crop"]])[0])
+        resolved_teams[tid] = team
 
     return {
         "frames": all_frames_cache,
         "track_boxes_per_frame": track_boxes_per_frame,
         "assigner": assigner,
         "remap": remap,
+        "resolved_teams": resolved_teams,
         "team_summary": assigner.summary(),
     }
