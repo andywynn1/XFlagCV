@@ -244,10 +244,10 @@ This produces a fully labeled video with every player boxed, tracked with a pers
 
 ## Future Work
 
+- 📁 Add batch/folder-mode processing to run the pipeline across multiple clips in a single execution.
 - 🎯 Continue training the detector on more contact footage to reduce fragmented IDs during collisions.
 - 🎽 Improve team assignment across a wider range of drone angles, lighting, and jersey color combinations.
 - 🧵 Refine stitching algorithms so collided players are reunited more consistently.
-- 📁 Add batch/folder-mode processing to run the pipeline across multiple clips in a single execution.
 - 🗺️ Implement field homography to convert player pixel positions into real-world statistics.
 
 ---
