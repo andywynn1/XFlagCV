@@ -96,7 +96,7 @@ XFlagCV/
 ### Detection
 *Located in `weights/best.pt`*
 
-Player detection uses a custom-trained YOLO11 model rather than a generic pretrained detector. The model was fine-tuned across multiple rounds of hand-annotated game footage involving a variety of drone heights, angles, and orientations.
+Player detection uses a custom-trained YOLO11 model rather than a generic pretrained detector. The model was fine-tuned across multiple rounds of hand annotated game footage involving a variety of drone heights, angles, and orientations.
 
 ### Tracking
 *Located in `src/pipeline.py`*
